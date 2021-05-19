@@ -24,8 +24,8 @@ class BitString:
 			times = self.event_dict[dom]
 			domid = domid_bin(dom[0], dom[1])
 			if times:
-				tbar = float(sum(event_times) / len(event_times))
-				qtot = float(len(event_times))
+				tbar = float(sum(times) / len(times))
+				qtot = float(len(times))
 			elif null_events:
 			    qtot, tbar = 0.0, 0.0
 
@@ -48,7 +48,7 @@ def GenerateSimulationStrings(geofile="./PPC/geo-f2k", hitsfile="mcp_hits.ppc", 
 	# Initialize dictionary with IceCube DOMs from geofile
 	geofile = np.genfromtxt(geofile)
 	iterator = zip(geofile[:,5], geofile[:,6], geofile[:,2], geofile[:,3], geofile[:,4])
-	event_dict = {tuple(tup[:2]) : [] for tup in iterator if tup[0] > 0 and tup[1] <= 60}
+	event_dict = {tuple(map(float, tup[:2])) : [] for tup in iterator if tup[0] > 0.0 and tup[1] <= 60.0}
 
 	# Read hits file and save hit information
 	with open(hitsfile) as hf:
@@ -73,7 +73,7 @@ def GenerateSimulationStrings(geofile="./PPC/geo-f2k", hitsfile="mcp_hits.ppc", 
 				elif method == "log_nonull":
 					bin_strings.append(string.log(False))
 
-				event_dict = dict.fromkeys(event_dict.keys())
+				event_dict = dict.fromkeys(event_dict.keys(), [])
 		print(bin_strings)
 
 GenerateSimulationStrings()
