@@ -41,7 +41,7 @@ class BitString:
             # Include DOMs without a hit
             if null_hits:
                 self.string += binary(qtot) + binary(tbar)      
-                # Include only DOMs with a hit
+            # Include only DOMs with a hit
             elif qtot > 0.0:
                 self.string += domid_bin(dom[0], dom[1]) + binary(qtot) + binary(tbar)
         return self.string
@@ -93,7 +93,6 @@ def GenerateSimulationStrings(geofile, hitsfile, method, output_filename):
 
 
 # Main
-
 if __name__ == "__main__":
     import argparse
 
