@@ -49,7 +49,6 @@ def GenerateSimulationStrings(geofile="./PPC/geo-f2k", hitsfile="mcp_hits.ppc", 
 	geofile = np.genfromtxt(geofile)
 	iterator = zip(geofile[:,5], geofile[:,6], geofile[:,2], geofile[:,3], geofile[:,4])
 	event_dict = {tuple(tup[:2]) : [] for tup in iterator if tup[0] > 0 and tup[1] <= 60}
-	print(event_dict)
 
 	# Read hits file and save hit information
 	with open(hitsfile) as hf:
@@ -75,6 +74,7 @@ def GenerateSimulationStrings(geofile="./PPC/geo-f2k", hitsfile="mcp_hits.ppc", 
 					bin_strings.append(string.log(False))
 
 				event_dict = dict.fromkeys(event_dict.keys())
+		print(bin_strings)
 
 GenerateSimulationStrings()
 
