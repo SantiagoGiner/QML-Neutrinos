@@ -86,7 +86,9 @@ def GenerateSimulationStrings(geofile, hitsfile, method, output_filename):
                     bit_strings.append(string.log(False))
 
                 event_dict = dict.fromkeys(event_dict.keys(), [])
+        bit_strings = [string for string in bit_strings if string]
         print(bit_strings)
+        print(len(''.join(bit_strings)))
         print(len(bit_strings))
         print([len(x) for x in bit_strings])
         np.save(output_filename, np.array(bit_strings, dtype=str))
