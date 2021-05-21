@@ -55,7 +55,7 @@ class BitString:
 
 # Function to generate event dictionary with DOM and hit time
 def GenerateSimulationStrings(geofile, hitsfile, method, output_filename):
-    bit_strings = []
+    bitstrings = []
     
 	# Initialize dictionary with IceCube DOMs from geofile
     geofile = np.genfromtxt(geofile)
@@ -74,24 +74,20 @@ def GenerateSimulationStrings(geofile, hitsfile, method, output_filename):
             elif "EE" in line:
                 string = BitString(event_dict)
                 if method == "nolog_null":
-                    bit_strings.append(string.nolog(True))
+                    bitstrings.append(string.nolog(True))
                                 
                 elif method == "nolog_nonull":
-                    bit_strings.append(string.nolog(False))
+                    bitstrings.append(string.nolog(False))
 
                 elif method == "log_null":
-                    bit_strings.append(string.log(True))
+                    bitstrings.append(string.log(True))
 
                 elif method == "log_nonull":
-                    bit_strings.append(string.log(False))
+                    bitstrings.append(string.log(False))
 
                 event_dict = dict.fromkeys(event_dict.keys(), [])
-        bit_strings = [string for string in bit_strings if string]
-        print(bit_strings)
-        print(len(''.join(bit_strings)))
-        print(len(bit_strings))
-        print([len(x) for x in bit_strings])
-        np.save(output_filename, np.array(bit_strings, dtype=str))
+        np.save(output_filename, np.array([string for string in bitstrings if string], dtype=str))
+        return True
 
 
 # Main
@@ -100,7 +96,7 @@ if __name__ == "__main__":
 
     def is_npy(parser, filename):
         if not filename[-4:] == ".npy":
-            parser("Output file must be a '.npy' file")
+            parser.error("Output file must be a '.npy' file.")
         else:
             return filename
 
@@ -109,7 +105,7 @@ if __name__ == "__main__":
                         help= "Input hits in PPC format")
     parser.add_argument("--input_hits", dest="hitsfile", type=str, default="mcp_hits.ppc",
                         help="Input hits in PPC format")
-    parser.add_argument("-o", dest="output_filename", type=lambda x: is_npy(parser, x), default="bit_strings.npy",
+    parser.add_argument("-o", dest="output_filename", type=lambda x: is_npy(parser, x), default="bitstrings.npy",
                         help="Output filename")
     parser.add_argument("-g", dest="geometry", type=str, default="geo-f2k",
                         help="Input detector geometry in F2K format")
@@ -117,5 +113,8 @@ if __name__ == "__main__":
                         help="Method to encode bit string")
 
     args = parser.parse_args()
-    GenerateSimulationStrings(args.geometry, args.hitsfile, args.method, args.output_filename)
+    if GenerateSimulationStrings(args.geometry, args.hitsfile, args.method, args.output_filename):
+        print(f"Bitstring encoded successfully in '{args.output_filename}.'")
+    else:
+        print("Failure to encode bitstring. Please try again.")
 
